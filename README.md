@@ -1,4 +1,4 @@
-# HSC Result Analysis
+# HSC Result Analysis for Purandar Taluka
 
 This project analyzes Higher Secondary Certificate (HSC) college results from 2021 to 2025 and provides an interactive Streamlit dashboard for comparing college-wise performance by year and stream.
 
