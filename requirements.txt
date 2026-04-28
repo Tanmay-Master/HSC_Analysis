@@ -1,0 +1,6 @@
+streamlit==1.28.1
+pandas==2.0.3
+plotly==5.17.0
+openpyxl==3.0.7
+notebook==6.5.3
+ipywidgets==8.0.4
