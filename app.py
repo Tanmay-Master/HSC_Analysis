@@ -1,9 +1,32 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import numpy as np
 
 # ---------- Page config ----------
 st.set_page_config(page_title="HSC College Comparison", layout="wide")
+st.markdown("""
+<style>
+    h1 {
+        color: #1f77b4;
+        text-align: center;
+        font-size: 2.5em;
+        margin-bottom: 0.5em;
+    }
+    h2 {
+        color: #1f77b4;
+        border-bottom: 3px solid #1f77b4;
+        padding-bottom: 10px;
+    }
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+</style>
+""", unsafe_allow_html=True)
 st.title("🎓 College‑wise Pass Percentage Comparison")
 
 # ---------- Load data (cached for speed) ----------
@@ -17,23 +40,23 @@ def load_data():
 df = load_data()
 # Define mapping dictionary
 college_mapping = {
-    "KARMAVEER BABURAO PATIL JUNIOR COLLEGE, PARINCHE": "KARMAVEER BABURAO PATIL COLLEGE",
-    "WAGHIRE COLLEGE OF ARTS,COME & SCIENCE, SASWAD": "WAGHIRE COLLEGE, SASWAD",
-    "KILACHAND JUNIOR COLLEGE, NIRA, TQ.PURANDAR, PUNE": "KILACHAND JR COLLEGE, NIRA",
-    "MAHARSHI WALMIKI JUINOR COLLEGE,WAHLE,TQ.PURANDAR": "MAHARSHI WALMIKI JR COLLEGE, WAHLE",
-    "PURANDAR JR.COLLEGE OF ARTS,SCIENCE,COMM, SASWAD": "PURANDAR JR COLLEGE, SASWAD",
-    "ABDULBHAI CHANDBHAI HUNDEKARI JR.COLLEGE, JEJURI": "ABDULBHAI HUNDEKARI COLLEGE, JEJURI",
-    "DR.SHANKARRAO KOLATE VIDYALAYA &JR.COLLEGE,PISARVE": "DR SHANKARRAO KOLATE COLLEGE, PISARVE",
-    "M.E.S.WAGHIRE HIGH SCHOOL & JR.COLLEGE, SASWAD": "MES WAGHIRE JR COLLEGE, SASWAD",
-    "SHRI.KEDARESHWAR VIDHYALAYA & JR.COLLEGE, KALDAREE": "SHRI KEDARESHWAR COLLEGE, KALDAREE",
+    "KARMAVEER BABURAO PATIL JUNIOR COLLEGE, PARINCHE": "KARMAVEER BABURAO PATIL Clg",
+    "WAGHIRE COLLEGE OF ARTS,COME & SCIENCE, SASWAD": "WAGHIRE Clg, SASWAD",
+    "KILACHAND JUNIOR COLLEGE, NIRA, TQ.PURANDAR, PUNE": "KILACHAND JR Clg, NIRA",
+    "MAHARSHI WALMIKI JUINOR COLLEGE,WAHLE,TQ.PURANDAR": "MAHARSHI WALMIKI JR Clg, WAHLE",
+    "PURANDAR JR.COLLEGE OF ARTS,SCIENCE,COMM, SASWAD": "PURANDAR JR Clg, SASWAD",
+    "ABDULBHAI CHANDBHAI HUNDEKARI JR.COLLEGE, JEJURI": "ABDULBHAI HUNDEKARI Clg, JEJURI",
+    "DR.SHANKARRAO KOLATE VIDYALAYA &JR.COLLEGE,PISARVE": "DR SHANKARRAO KOLATE Clg, PISARVE",
+    "M.E.S.WAGHIRE HIGH SCHOOL & JR.COLLEGE, SASWAD": "MES WAGHIRE JR Clg, SASWAD",
+    "SHRI.KEDARESHWAR VIDHYALAYA & JR.COLLEGE, KALDAREE": "SHRI KEDARESHWAR Clg, KALDAREE",
     "JIJAMATA VIDHYALAYA, JEJURI TAL-PURANDAR DT PUNE": "JIJAMATA VIDYALAYA, JEJURI",
-    "RISE-PISE SEC.& HIGHER SEC. SCHOOL, RISE, PURANDAR": "RISE-PISE COLLEGE, RISE",
-    "SHREE SHIVAJI ENG.MEDIUM.SCHL.& JR COL.SASWAD,PUNE": "SHREE SHIVAJI ENGLISH MEDIUM COLLEGE, SASWAD",
-    "MJPV AND SMK JR COL A/P SHIVARI TAL PURANDHAR": "MJPV & SMK JR COLLEGE, SHIVARI",
+    "RISE-PISE SEC.& HIGHER SEC. SCHOOL, RISE, PURANDAR": "RISE-PISE Clg, RISE",
+    "SHREE SHIVAJI ENG.MEDIUM.SCHL.& JR COL.SASWAD,PUNE": "SHREE SHIVAJI ENGLISH MEDIUM Clg",
+    "MJPV AND SMK JR COL A/P SHIVARI TAL PURANDHAR": "MJPV & SMK JR Clg, SHIVARI",
     "L R SHAHKANYA VIDYA MANDIR NIRA": "LR SHAHKANYA VIDYA MANDIR, NIRA",
     "WAGHIRE MAHAVIDY SASWAD": "WAGHIRE MAHAVIDYALAYA, SASWAD",
-    "PURANDAR H SCH AND JR.COL": "PURANDAR HIGH SCHOOL & JR COLLEGE",
-    "PANCHKROSHI SHETKARI TECHNICAL VIDY AND VYAVS": "PANCHKROSHI SHETKARI TECH COLLEGE"
+    "PURANDAR H SCH AND JR.COL": "PURANDAR HIGH SCHOOL & JR Clg",
+    "PANCHKROSHI SHETKARI TECHNICAL VIDY AND VYAVS": "PANCHKROSHI SHETKARI TECH Clg"
 }
 
 df["Name of the college"] = df["Name of the college"].replace(college_mapping)
@@ -69,27 +92,28 @@ fig = px.bar(
     y='Name of the college',
     orientation='h',
     text='Pass_Label',
-    title=f'{stream} Stream – Pass % ({year})',
+    title=f'{stream} Stream – Top Colleges performance In Purandar Taluka ({year})',
     color='Pass Percent',
     color_continuous_scale='Blues',
     height=max(400, len(filtered) * 25)
 )
 fig.update_traces(textposition='outside', textfont_size=12)
-fig.update_xaxes(range=[0, 105])
+fig.update_xaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
 fig.update_layout(
-    yaxis={'categoryorder': 'total ascending'},
+    yaxis=dict(categoryorder='total ascending', tickfont=dict(size=14)),
     margin=dict(l=300, r=100, t=100, b=80),
     yaxis_title='',
     xaxis_title='Pass Percentage (%)',
     font=dict(size=11),
-    showlegend=False
+    showlegend=False,
+    hovermode='closest'
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
 # ---------- Timeline: College Performance Over Years ----------
 st.markdown("---")
-st.subheader("📈 College Performance Timeline")
+st.markdown("<h2 style='color: #1f77b4;'>📈 College Performance Timeline</h2>", unsafe_allow_html=True)
 
 college = st.selectbox(
     "Select College for Timeline View",
@@ -116,7 +140,9 @@ if not college_timeline.empty:
             height=400
         )
         fig_timeline.update_traces(mode='lines+markers', hovertemplate='<b>%{fullData.name}</b><br>Year: %{x}<br>Count: %{y}<extra></extra>')
-        fig_timeline.update_xaxes(dtick=1)
+        fig_timeline.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
+        fig_timeline.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
+        fig_timeline.update_layout(hovermode='closest')
         st.plotly_chart(fig_timeline, use_container_width=True)
     
     with col2:
@@ -140,20 +166,47 @@ if not college_timeline.empty:
             marker_size=8,
             hovertemplate='Year: %{x}<br>Pass %: %{y:.1f}%<extra></extra>'
         )
-        fig_pass_pct.update_xaxes(dtick=1)
-        fig_pass_pct.update_yaxes(range=[0, 105])
+        fig_pass_pct.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
+        fig_pass_pct.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
+        fig_pass_pct.update_layout(hovermode='closest')
         st.plotly_chart(fig_pass_pct, use_container_width=True)
     
     # Performance Table
-    st.markdown("**Performance Details:**")
+    st.markdown("**📋 Performance Details:**")
     display_cols = ['Year', 'Candidates Appeared', 'Total Pass', 'Pass Percent', 'Distin-ction', 'Grade I', 'Grade II']
-    st.dataframe(college_timeline[display_cols].style.format({
+    styled_df = college_timeline[display_cols].style.format({
         'Pass Percent': '{:.1f}%',
         'Candidates Appeared': '{:.0f}',
         'Total Pass': '{:.0f}'
-    }), use_container_width=True)
+    }).background_gradient(subset=['Pass Percent'], cmap='Blues')
+    st.dataframe(styled_df, use_container_width=True)
 else:
     st.info(f"No timeline data available for {college}.")
+
+# ---------- All Colleges Pass Percentage Trend ----------
+st.markdown("---")
+st.markdown("<h2 style='color: #1f77b4;'>📊 All Colleges Pass Percentage Trend</h2>", unsafe_allow_html=True)
+
+all_colleges_trend = df[df['Stream'] == stream].sort_values('Year')
+
+if not all_colleges_trend.empty:
+    fig_all_colleges = px.line(
+        all_colleges_trend,
+        x='Year',
+        y='Pass Percent',
+        color='Name of the college',
+        markers=True,
+        title=f'{stream} Stream – All Colleges Pass Percentage Trend',
+        labels={'Pass Percent': 'Pass %', 'Name of the college': 'College'},
+        height=500
+    )
+    fig_all_colleges.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
+    fig_all_colleges.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
+    fig_all_colleges.update_layout(yaxis=dict(tickfont=dict(size=12)), hovermode='closest')
+    fig_all_colleges.update_traces(hovertemplate='<b>%{fullData.name}</b><br>Year: %{x}<br>Pass %: %{y:.1f}%<extra></extra>')
+    st.plotly_chart(fig_all_colleges, use_container_width=True)
+else:
+    st.info(f"No data available for {stream} stream")
 
 # ---------- Top Colleges by Average Pass % (Last 5 Years) ----------
 st.markdown("---")
@@ -164,7 +217,7 @@ min_year = max_year - 4
 years_range = list(range(min_year, max_year + 1))
 year_range_str = f"{min_year}-{max_year}"
 
-st.subheader(f"🏆 Top Colleges by Average Pass % ({year_range_str})")
+st.markdown(f"<h2 style='color: #1f77b4;'>🏆 Top Colleges by Average Pass % ({year_range_str})</h2>", unsafe_allow_html=True)
 
 # Filter data for last 5 years
 avg_data = df[df['Year'].isin(years_range)].groupby(['Name of the college', 'Stream']).agg({
@@ -181,7 +234,7 @@ tabs = st.tabs(streams)
 
 for tab, stream_name in zip(tabs, streams):
     with tab:
-        stream_data = avg_data[avg_data['Stream'] == stream_name].head(10)
+        stream_data = avg_data[avg_data['Stream'] == stream_name]
         
         if not stream_data.empty:
             # Create visualization
@@ -199,22 +252,30 @@ for tab, stream_name in zip(tabs, streams):
                     height=400
                 )
                 fig_top.update_layout(
+                    yaxis=dict(tickfont=dict(size=13)),
                     yaxis_title='',
                     xaxis_title=f'Average Pass % ({year_range_str})',
                     margin=dict(l=250, r=50, t=80, b=60),
-                    xaxis=dict(range=[0, 105])
+                    xaxis=dict(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray'),
+                    hovermode='closest'
                 )
                 fig_top.update_traces(textposition='outside', texttemplate='%{x:.1f}%')
                 st.plotly_chart(fig_top, use_container_width=True)
             
             with col2:
                 st.markdown("**Summary:**")
-                st.metric("Top College", stream_data.iloc[0]['College'][:30])
-                st.metric("Avg Pass %", f"{stream_data.iloc[0]['Avg Pass %']:.1f}%")
-                st.metric("Total Students", int(stream_data['Total Appeared'].sum()))
+                top_college = stream_data.iloc[0]
+                col_metric1, col_metric2, col_metric3 = st.columns(3)
+                with col_metric1:
+                    st.metric("🏆 Top College", top_college['College'][:25], delta=None)
+                with col_metric2:
+                    st.metric("📊 Avg Pass %", f"{top_college['Avg Pass %']:.1f}%", delta=None)
+                with col_metric3:
+                    st.metric("👥 Total Students", int(stream_data['Total Appeared'].sum()), delta=None)
         else:
             st.info(f"No data available for {stream_name} stream")
 
 # ---------- Optional: raw data table ----------
+st.markdown("---")
 with st.expander("📋 Show raw data"):
-    st.dataframe(filtered.drop(columns='Pass_Label'))
+    st.dataframe(filtered.drop(columns='Pass_Label'), use_container_width=True)
