@@ -97,19 +97,30 @@ fig = px.bar(
     color_continuous_scale='Blues',
     height=max(400, len(filtered) * 25)
 )
-fig.update_traces(textposition='outside', textfont_size=12)
-fig.update_xaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
+fig.update_traces(textposition='outside', textfont=dict(size=16, family='Arial Black'))
+fig.update_xaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray', 
+                 title_font=dict(size=18, family='Arial Black'))
 fig.update_layout(
-    yaxis=dict(categoryorder='total ascending', tickfont=dict(size=14)),
+    yaxis=dict(categoryorder='total ascending', tickfont=dict(size=16, family='Arial Black')),
     margin=dict(l=300, r=100, t=100, b=80),
     yaxis_title='',
     xaxis_title='Pass Percentage (%)',
-    font=dict(size=11),
+    font=dict(size=16, family='Arial Black'),
+    title_font=dict(size=20, family='Arial Black'),
     showlegend=False,
     hovermode='closest'
 )
+config = {
+    'toImageButtonOptions': {
+        'format': 'png',
+        'filename': f'{stream}_{year}_colleges_comparison',
+        'height': max(800, len(filtered) * 50),
+        'width': 1920,
+        'scale': 3
+    }
+}
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True, config=config)
 
 # ---------- Timeline: College Performance Over Years ----------
 st.markdown("---")
@@ -140,10 +151,26 @@ if not college_timeline.empty:
             height=400
         )
         fig_timeline.update_traces(mode='lines+markers', hovertemplate='<b>%{fullData.name}</b><br>Year: %{x}<br>Count: %{y}<extra></extra>')
-        fig_timeline.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
-        fig_timeline.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray')
-        fig_timeline.update_layout(hovermode='closest')
-        st.plotly_chart(fig_timeline, use_container_width=True)
+        fig_timeline.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+        fig_timeline.update_yaxes(showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+        fig_timeline.update_layout(hovermode='closest',
+                                   font=dict(size=14, family='Arial Black'),
+                                   title_font=dict(size=18, family='Arial Black'),
+                                   legend=dict(font=dict(size=14, family='Arial Black')))
+        config_timeline = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': f'{college}_{stream}_timeline',
+                'height': 800,
+                'width': 1600,
+                'scale': 3
+            }
+        }
+        st.plotly_chart(fig_timeline, use_container_width=True, config=config_timeline)
     
     with col2:
         # Timeline: Pass Percentage Trend
@@ -161,15 +188,30 @@ if not college_timeline.empty:
         fig_pass_pct.update_traces(
             mode='lines+markers+text',
             textposition='top center',
-            textfont_size=12,
+            textfont=dict(size=16, family='Arial Black'),
             line_color='#1f77b4',
-            marker_size=8,
+            marker_size=10,
             hovertemplate='Year: %{x}<br>Pass %: %{y:.1f}%<extra></extra>'
         )
-        fig_pass_pct.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
-        fig_pass_pct.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
-        fig_pass_pct.update_layout(hovermode='closest')
-        st.plotly_chart(fig_pass_pct, use_container_width=True)
+        fig_pass_pct.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+        fig_pass_pct.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+        fig_pass_pct.update_layout(hovermode='closest',
+                                   font=dict(size=14, family='Arial Black'),
+                                   title_font=dict(size=18, family='Arial Black'))
+        config_pass_pct = {
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': f'{college}_{stream}_pass_percentage_trend',
+                'height': 800,
+                'width': 1600,
+                'scale': 3
+            }
+        }
+        st.plotly_chart(fig_pass_pct, use_container_width=True, config=config_pass_pct)
     
     # Performance Table
     st.markdown("**📋 Performance Details:**")
@@ -200,11 +242,29 @@ if not all_colleges_trend.empty:
         labels={'Pass Percent': 'Pass %', 'Name of the college': 'College'},
         height=500
     )
-    fig_all_colleges.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray')
-    fig_all_colleges.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray')
-    fig_all_colleges.update_layout(yaxis=dict(tickfont=dict(size=12)), hovermode='closest')
-    fig_all_colleges.update_traces(hovertemplate='<b>%{fullData.name}</b><br>Year: %{x}<br>Pass %: %{y:.1f}%<extra></extra>')
-    st.plotly_chart(fig_all_colleges, use_container_width=True)
+    fig_all_colleges.update_xaxes(dtick=1, showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+    fig_all_colleges.update_yaxes(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray',
+                                  title_font=dict(size=16, family='Arial Black'),
+                                  tickfont=dict(size=14, family='Arial Black'))
+    fig_all_colleges.update_layout(yaxis=dict(tickfont=dict(size=14, family='Arial Black')), 
+                                   hovermode='closest',
+                                   font=dict(size=14, family='Arial Black'),
+                                   title_font=dict(size=18, family='Arial Black'),
+                                   legend=dict(font=dict(size=14, family='Arial Black')))
+    fig_all_colleges.update_traces(hovertemplate='<b>%{fullData.name}</b><br>Year: %{x}<br>Pass %: %{y:.1f}%<extra></extra>',
+                                   marker_size=8)
+    config_all_colleges = {
+        'toImageButtonOptions': {
+            'format': 'png',
+            'filename': f'{stream}_all_colleges_trend',
+            'height': 1000,
+            'width': 1920,
+            'scale': 3
+        }
+    }
+    st.plotly_chart(fig_all_colleges, use_container_width=True, config=config_all_colleges)
 else:
     st.info(f"No data available for {stream} stream")
 
@@ -252,15 +312,29 @@ for tab, stream_name in zip(tabs, streams):
                     height=400
                 )
                 fig_top.update_layout(
-                    yaxis=dict(tickfont=dict(size=13)),
+                    yaxis=dict(tickfont=dict(size=16, family='Arial Black')),
                     yaxis_title='',
                     xaxis_title=f'Average Pass % ({year_range_str})',
                     margin=dict(l=250, r=50, t=80, b=60),
-                    xaxis=dict(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray'),
-                    hovermode='closest'
+                    xaxis=dict(range=[0, 105], showgrid=True, gridwidth=1, gridcolor='lightgray',
+                              title_font=dict(size=16, family='Arial Black'),
+                              tickfont=dict(size=14, family='Arial Black')),
+                    hovermode='closest',
+                    font=dict(size=14, family='Arial Black'),
+                    title_font=dict(size=18, family='Arial Black')
                 )
-                fig_top.update_traces(textposition='outside', texttemplate='%{x:.1f}%')
-                st.plotly_chart(fig_top, use_container_width=True)
+                fig_top.update_traces(textposition='outside', texttemplate='%{x:.1f}%',
+                                     textfont=dict(size=16, family='Arial Black'))
+                config_top = {
+                    'toImageButtonOptions': {
+                        'format': 'png',
+                        'filename': f'{stream_name}_top_colleges_{year_range_str}',
+                        'height': 800,
+                        'width': 1920,
+                        'scale': 3
+                    }
+                }
+                st.plotly_chart(fig_top, use_container_width=True, config=config_top)
             
             with col2:
                 st.markdown("**Summary:**")
